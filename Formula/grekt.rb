@@ -7,17 +7,17 @@ class Grekt < Formula
   on_macos do
     on_arm do
       url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
-      sha256 "PLACEHOLDER_SHA256_ARM64"
+      sha256 "Not"
     end
     on_intel do
       url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-x64.tar.gz"
-      sha256 "PLACEHOLDER_SHA256_X64"
+      sha256 "Not"
     end
   end
 
   on_linux do
     url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-linux-x64.tar.gz"
-    sha256 "PLACEHOLDER_SHA256_LINUX"
+    sha256 "Not"
   end
 
   def install
