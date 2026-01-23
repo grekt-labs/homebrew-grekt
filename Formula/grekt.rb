@@ -1,7 +1,7 @@
 class Grekt < Formula
   desc "AI artifact manager - manage and sync AI configurations across tools"
   homepage "https://github.com/grekt-labs/cli"
-  version "0.2.0"
+  version "0.3.0"
   license "MIT"
 
   on_macos do
