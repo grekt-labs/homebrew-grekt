@@ -1,6 +1,6 @@
 class Grekt < Formula
   desc "AI artifact manager - manage and sync AI configurations across tools"
-  homepage "https://grekt.dev"
+  homepage "https://grekt.com"
   version "2.4.0"
   license "MIT"
 

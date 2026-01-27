@@ -40,7 +40,7 @@ jobs:
           cat > Formula/grekt.rb << EOF
           class Grekt < Formula
             desc "AI artifact manager - manage and sync AI configurations across tools"
-            homepage "https://grekt.dev"
+            homepage "https://grekt.com"
             version "${VERSION}"
             license "MIT"
 
