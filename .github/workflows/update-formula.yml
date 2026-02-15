@@ -18,7 +18,9 @@ jobs:
         run: |
           VERSION="${{ github.event.client_payload.version }}"
           VERSION="${VERSION#v}"
+          MAJOR_MINOR="${VERSION%.*}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
 
       - name: Download SHA256 files
         run: |
@@ -33,7 +35,7 @@ jobs:
           echo "SHA256_X64=$(cat /tmp/sha256-x64)" >> $GITHUB_ENV
           echo "SHA256_LINUX=$(cat /tmp/sha256-linux)" >> $GITHUB_ENV
 
-      - name: Update formula
+      - name: Update main formula (latest)
         run: |
           VERSION="${{ steps.version.outputs.version }}"
 
@@ -78,10 +80,77 @@ jobs:
           end
           EOF
 
+      - name: Create versioned formula
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          MAJOR_MINOR="${{ steps.version.outputs.major_minor }}"
+          FORMULA_SUFFIX=$(echo "${MAJOR_MINOR}" | tr '.' '-')
+          CLASS_SUFFIX=$(echo "${MAJOR_MINOR}" | tr '.' '')
+
+          cat > "Formula/grekt@${MAJOR_MINOR}.rb" << EOF
+          class GrektAT${CLASS_SUFFIX} < Formula
+            desc "AI artifact manager - manage and sync AI configurations across tools (${MAJOR_MINOR}.x)"
+            homepage "https://grekt.com"
+            version "${VERSION}"
+            license "MIT"
+
+            keg_only :versioned_formula
+
+            on_macos do
+              on_arm do
+                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
+                sha256 "${SHA256_ARM64}"
+              end
+              on_intel do
+                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-x64.tar.gz"
+                sha256 "${SHA256_X64}"
+              end
+            end
+
+            on_linux do
+              url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-linux-x64.tar.gz"
+              sha256 "${SHA256_LINUX}"
+            end
+
+            def install
+              if OS.mac?
+                if Hardware::CPU.arm?
+                  bin.install "grekt-macos-arm64" => "grekt"
+                else
+                  bin.install "grekt-macos-x64" => "grekt"
+                end
+              else
+                bin.install "grekt-linux-x64" => "grekt"
+              end
+            end
+
+            test do
+              assert_match "grekt", shell_output("#{bin}/grekt --version")
+            end
+          end
+          EOF
+
+      - name: Remove old versioned formulas (keep last 5)
+        run: |
+          CURRENT_MAJOR_MINOR="${{ steps.version.outputs.major_minor }}"
+
+          FORMULAS=$(ls Formula/grekt@*.rb 2>/dev/null | sort -t@ -k2 -V)
+          COUNT=$(echo "$FORMULAS" | grep -c . || true)
+
+          VERSIONS_TO_KEEP=5
+
+          if [ "$COUNT" -gt "$VERSIONS_TO_KEEP" ]; then
+            REMOVE_COUNT=$((COUNT - VERSIONS_TO_KEEP))
+            echo "$FORMULAS" | head -n "$REMOVE_COUNT" | while read -r file; do
+              echo "Removing old formula: $file"
+              rm "$file"
+            done
+          fi
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/grekt.rb
+          git add Formula/
           git commit -m "chore: update grekt to v${{ steps.version.outputs.version }}"
           git push
