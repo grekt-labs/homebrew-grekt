@@ -85,7 +85,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           MAJOR_MINOR="${{ steps.version.outputs.major_minor }}"
           FORMULA_SUFFIX=$(echo "${MAJOR_MINOR}" | tr '.' '-')
-          CLASS_SUFFIX=$(echo "${MAJOR_MINOR}" | tr '.' '')
+          CLASS_SUFFIX=$(echo "${MAJOR_MINOR}" | tr -d '.')
 
           cat > "Formula/grekt@${MAJOR_MINOR}.rb" << EOF
           class GrektAT${CLASS_SUFFIX} < Formula
