@@ -3,6 +3,11 @@ name: Update Formula
 on:
   repository_dispatch:
     types: [update-formula]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy (e.g. 6.21.1 or v6.21.1)"
+        required: true
 
 permissions:
   contents: write
@@ -16,7 +21,7 @@ jobs:
       - name: Get version
         id: version
         run: |
-          VERSION="${{ github.event.client_payload.version }}"
+          VERSION="${{ github.event.client_payload.version || github.event.inputs.version }}"
           VERSION="${VERSION#v}"
           MAJOR_MINOR="${VERSION%.*}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
