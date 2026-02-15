@@ -1,8 +1,10 @@
-class Grekt < Formula
-  desc "AI artifact manager - manage and sync AI configurations across tools"
+class GrektAT621 < Formula
+  desc "AI artifact manager - manage and sync AI configurations across tools (6.21.x)"
   homepage "https://grekt.com"
   version "6.21.1"
   license "MIT"
+
+  keg_only :versioned_formula
 
   on_macos do
     on_arm do
