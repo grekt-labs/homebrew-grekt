@@ -34,11 +34,11 @@ git push origin v2.1.0
 1. **CLI `release.yml` workflow**:
    - Builds binaries (linux-x64, macos-arm64, macos-x64)
    - Creates tarballs with SHA256 checksums
-   - Publishes Release to `grekt-labs/cli-releases`
+   - Creates Release in `grekt-labs/cli`
    - Triggers `repository_dispatch` to this repo
 
 2. **This repo `update-formula.yml` workflow**:
-   - Downloads SHA256 checksums from cli-releases
+   - Downloads SHA256 checksums from the CLI release
    - Updates `Formula/grekt.rb` with new version and checksums
    - Commits and pushes automatically
 
@@ -46,7 +46,6 @@ git push origin v2.1.0
 
 | Secret | Purpose |
 |--------|---------|
-| `RELEASES_REPO_TOKEN` | Create releases in `cli-releases` |
 | `HOMEBREW_TAP_TOKEN` | Trigger dispatch to this repo |
 
 ### Manual Update (if needed)

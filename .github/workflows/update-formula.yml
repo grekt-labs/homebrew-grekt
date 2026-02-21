@@ -30,7 +30,7 @@ jobs:
       - name: Download SHA256 files
         run: |
           VERSION="v${{ steps.version.outputs.version }}"
-          BASE_URL="https://github.com/grekt-labs/cli-releases/releases/download/${VERSION}"
+          BASE_URL="https://github.com/grekt-labs/cli/releases/download/${VERSION}"
 
           curl -sL "${BASE_URL}/grekt-macos-arm64.tar.gz.sha256" | awk '{print $1}' > /tmp/sha256-arm64
           curl -sL "${BASE_URL}/grekt-macos-x64.tar.gz.sha256" | awk '{print $1}' > /tmp/sha256-x64
@@ -53,17 +53,17 @@ jobs:
 
             on_macos do
               on_arm do
-                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
+                url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
                 sha256 "${SHA256_ARM64}"
               end
               on_intel do
-                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-x64.tar.gz"
+                url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-x64.tar.gz"
                 sha256 "${SHA256_X64}"
               end
             end
 
             on_linux do
-              url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-linux-x64.tar.gz"
+              url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-linux-x64.tar.gz"
               sha256 "${SHA256_LINUX}"
             end
 
@@ -103,17 +103,17 @@ jobs:
 
             on_macos do
               on_arm do
-                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
+                url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
                 sha256 "${SHA256_ARM64}"
               end
               on_intel do
-                url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-macos-x64.tar.gz"
+                url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-x64.tar.gz"
                 sha256 "${SHA256_X64}"
               end
             end
 
             on_linux do
-              url "https://github.com/grekt-labs/cli-releases/releases/download/v#{version}/grekt-linux-x64.tar.gz"
+              url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-linux-x64.tar.gz"
               sha256 "${SHA256_LINUX}"
             end
 
