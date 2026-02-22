@@ -27,18 +27,26 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
 
-      - name: Download SHA256 files
+      - name: Get checksums
         run: |
-          VERSION="v${{ steps.version.outputs.version }}"
-          BASE_URL="https://github.com/grekt-labs/cli/releases/download/${VERSION}"
+          SHA256_ARM64="${{ github.event.client_payload.sha256_arm64 }}"
+          SHA256_X64="${{ github.event.client_payload.sha256_x64 }}"
+          SHA256_LINUX="${{ github.event.client_payload.sha256_linux }}"
 
-          curl -sL "${BASE_URL}/grekt-macos-arm64.tar.gz.sha256" | awk '{print $1}' > /tmp/sha256-arm64
-          curl -sL "${BASE_URL}/grekt-macos-x64.tar.gz.sha256" | awk '{print $1}' > /tmp/sha256-x64
-          curl -sL "${BASE_URL}/grekt-linux-x64.tar.gz.sha256" | awk '{print $1}' > /tmp/sha256-linux
+          if [ -z "$SHA256_ARM64" ] || [ -z "$SHA256_X64" ] || [ -z "$SHA256_LINUX" ]; then
+            echo "Checksums not in payload, downloading from release..."
+            VERSION="v${{ steps.version.outputs.version }}"
 
-          echo "SHA256_ARM64=$(cat /tmp/sha256-arm64)" >> $GITHUB_ENV
-          echo "SHA256_X64=$(cat /tmp/sha256-x64)" >> $GITHUB_ENV
-          echo "SHA256_LINUX=$(cat /tmp/sha256-linux)" >> $GITHUB_ENV
+            SHA256_ARM64=$(gh release download "${VERSION}" --repo grekt-labs/cli --pattern "grekt-macos-arm64.tar.gz.sha256" --output - | awk '{print $1}')
+            SHA256_X64=$(gh release download "${VERSION}" --repo grekt-labs/cli --pattern "grekt-macos-x64.tar.gz.sha256" --output - | awk '{print $1}')
+            SHA256_LINUX=$(gh release download "${VERSION}" --repo grekt-labs/cli --pattern "grekt-linux-x64.tar.gz.sha256" --output - | awk '{print $1}')
+          fi
+
+          echo "SHA256_ARM64=${SHA256_ARM64}" >> $GITHUB_ENV
+          echo "SHA256_X64=${SHA256_X64}" >> $GITHUB_ENV
+          echo "SHA256_LINUX=${SHA256_LINUX}" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Update main formula (latest)
         run: |
