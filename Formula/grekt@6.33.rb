@@ -1,7 +1,7 @@
 class GrektAT633 < Formula
   desc "AI artifact manager - manage and sync AI configurations across tools (6.33.x)"
   homepage "https://grekt.com"
-  version "6.33.0"
+  version "6.33.1"
   license "MIT"
 
   keg_only :versioned_formula
@@ -9,17 +9,17 @@ class GrektAT633 < Formula
   on_macos do
     on_arm do
       url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-arm64.tar.gz"
-      sha256 "239fd2dbec19f715373df2c103a7e5e3f429714b0e9ce33bbac24ee442233192"
+      sha256 "698271bab157075f244623778a6d6a47af1fed6cf01fee2fe9df5e7da6a76b36"
     end
     on_intel do
       url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-macos-x64.tar.gz"
-      sha256 "837c2ac6aca64cd541607818421782ff6320b96bda04cf0968bcbd793b1d8d00"
+      sha256 "494f169e3ebe2179ffcb2d973106c4ff4b6a6bd9e3a5df5981156df28e624ff0"
     end
   end
 
   on_linux do
     url "https://github.com/grekt-labs/cli/releases/download/v#{version}/grekt-linux-x64.tar.gz"
-    sha256 "8d855b1d2e219f62d58043203da6f23702173c57ec39331193015fe6a8de7c6c"
+    sha256 "592511c91459387b0c3f6aa7fd42e81e665034d8e1faf7488752d5943d56f545"
   end
 
   def install
